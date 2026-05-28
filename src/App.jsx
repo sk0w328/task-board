@@ -1,10 +1,20 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import TaskInput from './components/TaskInput'
 import TaskList from './components/TaskList'
 import styles from './App.module.css'
 
 export default function App() {
-  const [tasks, setTasks] = useState([])
+  const [tasks, setTasks] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('tasks')) ?? []
+    } catch {
+      return []
+    }
+  })
+
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks))
+  }, [tasks])
 
   function addTask(text) {
     setTasks(prev => [
